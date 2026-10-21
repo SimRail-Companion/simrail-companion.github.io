@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimRail Companion</title>
+  <meta name="description" content="Begleit-App für SimRail: Dienstpläne wie im echten Bahnbetrieb – im Browser, kostenlos, mit oder ohne Konto.">
+  <link rel="stylesheet" href="css/stil.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
+  <script src="js/konto.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .innen { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+    header { position: sticky; top: 0; z-index: 50; background: #1a1d24e6; backdrop-filter: blur(8px); border-bottom: 1px solid var(--linie); }
+    header .innen { display: flex; align-items: center; height: 68px; padding-right: 72px; }
+    .marke { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--text); text-decoration: none; }
+    .kopf-links { margin-left: auto; display: flex; gap: 22px; font-size: 15px; }
+    .kopf-links a { color: var(--leise); text-decoration: none; }
+    .kopf-links a:hover { color: var(--text); }
+    @media (max-width: 720px) { .kopf-links { display: none; } }
+
+    .held { padding: 80px 0 60px; background: radial-gradient(1100px 420px at 75% -10%, #4da3ff2e, transparent 70%),
+                                                 radial-gradient(700px 300px at 0% 110%, #3fb95014, transparent 70%); }
+    .held h1 { font-size: clamp(34px, 6vw, 56px); line-height: 1.08; margin: 0 0 18px; color: var(--text); letter-spacing: -.02em; }
+    .held h1 em { font-style: normal; color: var(--blau); }
+    .held p.lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--mittel); max-width: 640px; margin: 0 0 28px; }
+    .knoepfe { display: flex; flex-wrap: wrap; gap: 12px; }
+    .knoepfe .knopf, .knoepfe button { margin: 0; padding: 13px 22px; font-size: 16px; border-radius: 10px; }
+    .knoepfe .zweit { background: transparent; color: var(--text); border: 1px solid #4a5060; }
+    .knoepfe .zweit:hover { background: var(--flaeche); }
+    .marke-v1 { display: inline-block; font-size: 13px; color: var(--leise); background: var(--flaeche2); border: 1px solid var(--linie);
+                padding: 5px 12px; border-radius: 99px; margin-bottom: 20px; }
+
+    section { padding: 56px 0; }
+    section + section { border-top: 1px solid #262a33; }
+    .ueber { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--blau); margin: 0 0 8px; }
+    section h2 { font-size: clamp(26px, 3.6vw, 32px); margin: 0 0 12px; color: var(--text); border: none; padding: 0; }
+    .unter { color: var(--mittel); max-width: 680px; margin: 0 0 30px; }
+    .karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .karte { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 14px; padding: 22px; }
+    .karte .sym { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 22px;
+                  background: #4da3ff1f; margin-bottom: 14px; }
+    .karte h3 { margin: 0 0 8px; font-size: 18px; }
+    .karte p { margin: 0 0 10px; color: var(--mittel); font-size: 15px; }
+    .karte ul { margin: 0; padding-left: 18px; color: var(--leise); font-size: 14px; }
+    .karte.bald { opacity: .75; border-style: dashed; }
+    .bald-marke { font-size: 12px; color: var(--orange); border: 1px solid #ffb45466; border-radius: 99px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
+
+    .schritte { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: s; }
+    .schritt { position: relative; background: var(--flaeche2); border: 1px solid var(--linie); border-radius: 14px; padding: 24px 22px 22px; }
+    .schritt::before { counter-increment: s; content: counter(s); position: absolute; top: -16px; left: 22px; width: 32px; height: 32px;
+                       border-radius: 50%; background: var(--blau); color: #0b0e14; font-weight: 800; display: grid; place-items: center; }
+    .schritt h3 { margin: 6px 0; font-size: 17px; }
+    .schritt p { margin: 0; color: var(--mittel); font-size: 15px; }
+    @media (max-width: 820px) { .schritte { grid-template-columns: 1fr; gap: 26px; } }
+
+    footer { border-top: 1px solid var(--linie); padding: 28px 0 40px; color: var(--leise); font-size: 14px; }
+    footer .innen { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="innen">
+    <a class="marke" href="#">🚂 SimRail Companion</a>
+    <nav class="kopf-links" aria-label="Abschnitte">
+      <a href="#funktionen">Funktionen</a>
+      <a href="#loslegen">Loslegen</a>
+      <a href="#bald">Was kommt</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="held">
+    <div class="innen">
+      <span class="marke-v1">Version 1 · kostenlos · im Browser</span>
+      <h1>Dein Dienstplan für <em>SimRail</em>.</h1>
+      <p class="lead">Wähle eine Border Station und ein Zeitfenster – SimRail Companion stellt dir einen Dienst zusammen,
+        bei dem jede Fahrt dort beginnt, wo die letzte endete. Wie im echten Bahnbetrieb.</p>
+      <div class="knoepfe">
+        <a class="knopf" href="app.html">🚂 App öffnen</a>
+        <button class="zweit" type="button" id="kontoKnopf">Konto anlegen</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="funktionen">
+    <div class="innen">
+      <p class="ueber">Funktionen</p>
+      <h2>Was Version 1 kann</h2>
+      <p class="unter">Wir fangen ganz vorne an – mit dem Herzstück: dem Dienstplan. Weitere Funktionen kommen Schritt für Schritt dazu.</p>
+      <div class="karten">
+        <article class="karte">
+          <div class="sym">📋</div>
+          <h3>Dienstpläne</h3>
+          <p>Ein Dienst aus mehreren Fahrten zwischen Border Stations – passend zu deinem Zeitfenster.</p>
+          <ul>
+            <li>Fünf Pläne zur Auswahl</li>
+            <li>Countdown bis Dienstbeginn</li>
+            <li>Startbahnhof festhalten: weiter, wo der letzte Dienst endete</li>
+          </ul>
+        </article>
+        <article class="karte">
+          <div class="sym">🗒️</div>
+          <h3>Deine Fahrten</h3>
+          <p>Hak gefahrene Fahrten ab – mit Kilometern und Verspätung.</p>
+          <ul>
+            <li>Ganz gefahrene Züge kommen nicht noch einmal</li>
+            <li>Übersicht über Kilometer und Pünktlichkeit</li>
+          </ul>
+        </article>
+        <article class="karte">
+          <div class="sym">👤</div>
+          <h3>Mit oder ohne Konto</h3>
+          <p>Als Gast bleibt dein Fortschritt im Browser. Mit Konto ist er auf jedem Gerät da.</p>
+          <ul>
+            <li>Anmelden über das Menü oben rechts</li>
+            <li>Gast-Fortschritt wandert beim Registrieren mit</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="loslegen">
+    <div class="innen">
+      <p class="ueber">Loslegen</p>
+      <h2>In drei Schritten zum ersten Dienst</h2>
+      <p class="unter">Keine Installation nötig – du brauchst nur SimRail und diesen Browser-Tab.</p>
+      <div class="schritte">
+        <div class="schritt"><h3>Dienst planen</h3><p>In der App Border Station und Zeitfenster wählen und einen der Pläne nehmen.</p></div>
+        <div class="schritt"><h3>Fahren</h3><p>Im Spiel den Zug an der Border Station übernehmen und bis zum Ziel des Plans fahren.</p></div>
+        <div class="schritt"><h3>Abhaken</h3><p>Fahrt mit Kilometern und Verspätung abhaken – der nächste Dienst beginnt dort, wo du aufgehört hast.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="bald">
+    <div class="innen">
+      <p class="ueber">Was kommt</p>
+      <h2>Als Nächstes geplant</h2>
+      <p class="unter">Diese Funktionen gibt es schon in unserer lokalen Version und kommen nach und nach in die Web-App.</p>
+      <div class="karten">
+        <article class="karte bald"><div class="sym">⭐</div><h3>Level & Abzeichen <span class="bald-marke">bald</span></h3>
+          <p>XP für jede Fahrt, 100 Level, Abzeichen für Strecken, Zugarten und Loks.</p></article>
+        <article class="karte bald"><div class="sym">📄</div><h3>Fahrplanunterlagen <span class="bald-marke">bald</span></h3>
+          <p>Buchfahrplan im Stil der polnischen Originalunterlagen mit beschleunigten Fahrzeiten.</p></article>
+        <article class="karte bald"><div class="sym">🔌</div><h3>Verbindung zum Spiel <span class="bald-marke">später</span></h3>
+          <p>Ein kleines Programm auf deinem PC: First-Person-Dienste, Live-Abfahrten, Ansagen und automatische Auswertung jeder Fahrt.</p></article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="innen">
+    <span>SimRail Companion – ein inoffizielles Fanprojekt, nicht mit SimRail S.A. verbunden.</span>
+    <span><a href="https://github.com/SimRail-Companion">Quellcode auf GitHub</a> · MIT-Lizenz</span>
+  </div>
+</footer>
+
+<script>
+  function kontoAnzeigen() {
+    const k = window.SimRailKonto, knopf = document.getElementById("kontoKnopf");
+    knopf.textContent = k && k.angemeldet() ? "👤 " + k.name() : "Konto anlegen";
+  }
+  document.getElementById("kontoKnopf").addEventListener("click", () => {
+    const k = window.SimRailKonto;
+    if (k) k.oeffnen(k.angemeldet() ? null : "registrieren");
+  });
+  document.addEventListener("simrailkonto", kontoAnzeigen);
+  kontoAnzeigen();
+</script>
+</body>
+</html>

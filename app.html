@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SimRail Companion – App</title>
+  <link rel="stylesheet" href="css/stil.css">
+  <!-- Konto (Supabase) – muss vor allen anderen Skripten laden, siehe js/konto.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
+  <script src="js/konto.js"></script>
+</head>
+<body>
+<div class="app">
+  <h1><a href="index.html">🚂 SimRail Companion</a></h1>
+
+  <nav class="reiter" aria-label="Bereiche">
+    <button id="nav-dienstplan" onclick="seiteZeigen('dienstplan')">📋 Dienstplan</button>
+    <button id="nav-fahrten" onclick="seiteZeigen('fahrten')">🗒️ Fahrten</button>
+    <button id="nav-einstellungen" onclick="seiteZeigen('einstellungen')">⚙️ Einstellungen</button>
+  </nav>
+
+  <!-- ===================== DIENSTPLAN ===================== -->
+  <section class="seite" id="seite-dienstplan">
+    <h2>📋 Dienstplan generieren</h2>
+    <div class="box">
+      <p class="hinweis" style="margin-top:0">Du beginnst deinen Dienst an der Border Station:
+        <span class="home" id="homeAnzeige">–</span></p>
+      <div class="reihe">
+        <div>
+          <label for="startBahnhof">Border Station (Start)</label>
+          <select id="startBahnhof"></select>
+        </div>
+        <div>
+          <label for="fensterVon">Dienst von</label>
+          <input type="time" id="fensterVon">
+        </div>
+        <div>
+          <label for="fensterBis">Dienst bis</label>
+          <input type="time" id="fensterBis">
+        </div>
+      </div>
+      <label class="haken" style="margin-top:12px !important">
+        <input type="checkbox" id="startGesperrt" onchange="sperreUmschalten(this.checked)">
+        🔒 Startbahnhof festhalten – der Dienst beginnt immer dort, wo der letzte endete
+      </label>
+      <button class="grau" id="zufallKnopf" onclick="zufallsStart()">🎲 Zufälliger Startbahnhof</button>
+      <button onclick="dienstplanGenerieren()">Dienstplan generieren</button>
+    </div>
+    <div id="timer"></div>
+    <div id="dienstplanAusgabe"></div>
+  </section>
+
+  <!-- ===================== FAHRTEN ===================== -->
+  <section class="seite" id="seite-fahrten">
+    <h2>🗒️ Deine Fahrten</h2>
+    <div class="zahlen">
+      <div class="zahl-kasten"><b id="anzahlFahrten">0</b><span>Fahrten</span></div>
+      <div class="zahl-kasten"><b id="gesamtKm">0</b><span>Kilometer</span></div>
+      <div class="zahl-kasten"><b id="schnittVersp">–</b><span>Ø Verspätung (min)</span></div>
+    </div>
+    <h3>Alle Fahrten</h3>
+    <div id="fahrtenListe"></div>
+  </section>
+
+  <!-- ===================== EINSTELLUNGEN ===================== -->
+  <section class="seite" id="seite-einstellungen">
+    <h2>⚙️ Einstellungen</h2>
+    <div class="box">
+      <h3 style="margin-top:0">👤 Konto</h3>
+      <p class="hinweis" style="margin-top:0">Anmelden, Registrieren und Abmelden findest du im Menü oben rechts (☰).
+        Ohne Konto spielst du als Gast – dein Fortschritt bleibt dann nur in diesem Browser.</p>
+    </div>
+    <div class="box">
+      <h3 style="margin-top:0">⚠️ Karriere zurücksetzen</h3>
+      <p class="hinweis" style="margin-top:0">Löscht alle gefahrenen Fahrten, den aktuellen Dienstplan und deinen
+        Startbahnhof. Das lässt sich nicht rückgängig machen.</p>
+      <button class="gefahr" onclick="karriereZuruecksetzen()">Karriere komplett zurücksetzen</button>
+    </div>
+    <p class="hinweis">SimRail Companion ist ein inoffizielles Fanprojekt und steht in keiner Verbindung zu
+      SimRail S.A. Fahrplandaten: offizielle SimRail-Schnittstelle (Server DE1).</p>
+  </section>
+</div>
+
+<script src="daten/trains.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

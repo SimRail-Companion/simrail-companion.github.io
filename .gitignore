@@ -1,0 +1,8 @@
+# Datenbanken, Logs und Zwischenspeicher gehoeren nie ins Repository
+*.db
+*.log
+*.bak*
+__pycache__/
+.DS_Store
+Thumbs.db
+.claude/
