@@ -15,12 +15,15 @@ kostenlos, als Gast oder mit eigenem Konto.
   der nächste Dienst beginnt am Ziel des letzten.
 - **Gast oder Konto:** Ohne Anmeldung bleibt der Fortschritt im Browser. Mit Konto (E-Mail + Passwort) ist er
   auf jedem Gerät verfügbar.
+- **Stationsansagen:** Etwa einen Kilometer vor jedem Halt sagt die App den Stationsnamen an – auf Polnisch,
+  Deutsch oder Englisch. Im Fernverkehr meldet sich der Zugbegleiter mit Begrüßung und Ankunftsansage.
+  Die App erkennt deinen Zug über deine Steam-ID in den Live-Daten von SimRail (nur Server DE1).
 
 ## Was kommt?
 
 Schritt für Schritt kommen Funktionen aus unserer lokalen Version dazu: Level & Abzeichen, Fahrplanunterlagen
 (Buchfahrplan) und später ein kleines Programm, das die Web-App mit dem laufenden Spiel verbindet
-(First-Person-Dienste, Live-Abfahrten, Ansagen, automatische Auswertung).
+(First-Person-Dienste, Live-Abfahrten, Umstiegsansagen, automatische Auswertung).
 
 Ideen und Fehler gerne als [Issue](../../issues) melden.
 
@@ -30,6 +33,8 @@ Ideen und Fehler gerne als [Issue](../../issues) melden.
 |---|---|
 | `index.html` | Startseite |
 | `app.html`, `js/app.js` | die App (Dienstplan, Fahrten, Einstellungen) |
+| `js/ansage.js` | Stationsansagen (Live-Daten von SimRail, Sprachausgabe des Browsers) |
+| `daten/ansagen.js` | Halte, Sollzeiten und Bahnsteig-Koordinaten für die Ansagen (automatisch erzeugt) |
 | `js/konto.js` | Burger-Menü, Gast-Modus, Konto und Speichern des Fortschritts (Supabase) |
 | `css/stil.css` | gemeinsames Aussehen |
 | `daten/trains.js` | Fahrplan (aus der offiziellen SimRail-Schnittstelle, Server DE1, automatisch erzeugt) |
@@ -48,6 +53,9 @@ Rechner im Projektordner `python -m http.server 8080` starten und `http://localh
 ## Quellen
 
 - Fahrplandaten: offizielle SimRail-Schnittstelle (`api1.aws.simrail.eu`)
+- Live-Daten der Züge: offizielle SimRail-Schnittstelle (`panel.simrail.eu`)
+- Lage der Bahnsteige: eigene Messungen und [OpenStreetMap](https://www.openstreetmap.org/copyright)
+  (© OpenStreetMap-Mitwirkende, Lizenz [ODbL](https://opendatacommons.org/licenses/odbl/))
 - Konten: [Supabase](https://supabase.com), Bibliothek `@supabase/supabase-js`
 
 ## Lizenz

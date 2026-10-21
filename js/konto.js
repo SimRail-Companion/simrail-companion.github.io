@@ -22,7 +22,7 @@
   const SUPABASE_URL = "https://tueizogtxtdwlhbfhmyb.supabase.co";
   const SUPABASE_KEY = "sb_publishable_fji9RzwRsJU-g13UpPRh5g_fTQymmai";
 
-  const GERAET = new Set(["simrail_seite", "simrail_gast_sicherung"]);   // gehören zum Gerät, nicht zum Spieler
+  const GERAET = new Set(["simrail_seite", "simrail_gast_sicherung", "simrail_ansage_an"]);   // gehören zum Gerät, nicht zum Spieler
   const K = { id: "simrail_konto_id", name: "simrail_konto_name", version: "simrail_konto_version",
               offen: "simrail_konto_offen" };
   const PUSH_VERZOEGERUNG_MS = 1500;

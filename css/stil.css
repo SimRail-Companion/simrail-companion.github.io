@@ -86,6 +86,14 @@ button.mini { margin-top: 0; padding: 6px 10px; font-size: 13px; font-weight: no
          display: flex; justify-content: space-between; gap: 10px; align-items: center; }
 .fahrt[hidden] { display: none; }
 
+/* ---- Stationsansagen ---- */
+input[type="range"] { padding: 0; accent-color: var(--blau); }
+.ansage-leiste { position: fixed; right: 14px; bottom: 14px; max-width: min(380px, calc(100vw - 28px));
+                 background: #1f2a3a; border: 1px solid #2f4a6b; border-radius: 10px; padding: 10px 14px;
+                 font-size: 13px; color: var(--mittel); box-shadow: 0 6px 20px #0008; z-index: 40; }
+.ansage-leiste b { color: var(--text); }
+.ansage-leiste.warn { border-color: #6b5a2a; background: #2e2a1c; }
+
 @media (max-width: 520px) {
   .zahlen { grid-template-columns: 1fr 1fr; }
   .dienst-fahrt { flex-wrap: wrap; }

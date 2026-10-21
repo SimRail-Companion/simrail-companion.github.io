@@ -71,17 +71,73 @@
         Ohne Konto spielst du als Gast – dein Fortschritt bleibt dann nur in diesem Browser.</p>
     </div>
     <div class="box">
+      <h3 style="margin-top:0">🔊 Stationsansagen</h3>
+      <p class="hinweis" style="margin-top:0">Etwa einen Kilometer vor jedem Halt sagt die App den Stationsnamen an –
+        wie im echten Zug, auf Polnisch, Deutsch oder Englisch. Im Fernverkehr begrüßt dich stattdessen der
+        Zugbegleiter nach der Abfahrt und meldet sich kurz vor der Ankunft. Lass diesen Tab dafür geöffnet –
+        im Hintergrund reicht. Nur Server DE1.</p>
+      <label for="ansageSteamId">Deine Steam-ID</label>
+      <input type="text" id="ansageSteamId" inputmode="numeric" autocomplete="off" placeholder="z. B. 76561198000000000">
+      <p class="hinweis">Daran erkennt die App deinen Zug in den Live-Daten von SimRail. Die ID wird nur in
+        deinem Browser verglichen. Du findest sie in Steam unter <i>Kontodetails</i> („Steam-ID: …“).</p>
+      <label class="haken" style="margin-top:12px !important">
+        <input type="checkbox" id="ansageAn"> Ansagen einschalten (auf diesem Gerät)
+      </label>
+      <label class="haken" style="margin-top:8px !important">
+        <input type="checkbox" id="ansageFern" checked> auch im Fernverkehr: Ansagen wie vom Zugbegleiter
+      </label>
+      <div class="reihe">
+        <div>
+          <label for="ansageAbstand">Ansage vor dem Halt</label>
+          <select id="ansageAbstand">
+            <option value="600">ca. 600 m</option>
+            <option value="1000" selected>ca. 1 km</option>
+            <option value="1500">ca. 1,5 km</option>
+            <option value="2000">ca. 2 km</option>
+          </select>
+        </div>
+        <div>
+          <label for="ansageSprache">Sprache</label>
+          <select id="ansageSprache">
+            <option value="pl">Polski</option>
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+      <div class="reihe">
+        <div>
+          <label for="ansageStimme">Stimme</label>
+          <select id="ansageStimme"></select>
+        </div>
+        <div>
+          <label for="ansageLautstaerke">Lautstärke</label>
+          <input type="range" id="ansageLautstaerke" min="0.1" max="1" step="0.1" value="1">
+        </div>
+      </div>
+      <label class="haken" style="margin-top:12px !important">
+        <input type="checkbox" id="ansageGong" checked> Gong vor der Ansage
+      </label>
+      <button class="grau" type="button" id="ansageProbe">Probeansage</button>
+      <p id="ansageStimmenHinweis" class="hinweis warnung"></p>
+      <p id="ansageStatus" class="hinweis"></p>
+    </div>
+    <div class="box">
       <h3 style="margin-top:0">⚠️ Karriere zurücksetzen</h3>
       <p class="hinweis" style="margin-top:0">Löscht alle gefahrenen Fahrten, den aktuellen Dienstplan und deinen
         Startbahnhof. Das lässt sich nicht rückgängig machen.</p>
       <button class="gefahr" onclick="karriereZuruecksetzen()">Karriere komplett zurücksetzen</button>
     </div>
     <p class="hinweis">SimRail Companion ist ein inoffizielles Fanprojekt und steht in keiner Verbindung zu
-      SimRail S.A. Fahrplandaten: offizielle SimRail-Schnittstelle (Server DE1).</p>
+      SimRail S.A. Fahrplandaten: offizielle SimRail-Schnittstelle (Server DE1). Lage der Bahnsteige teils aus
+      <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> (© OpenStreetMap-Mitwirkende, ODbL).</p>
   </section>
 </div>
 
+<div id="ansageLeiste" class="ansage-leiste" hidden></div>
+
 <script src="daten/trains.js"></script>
 <script src="js/app.js"></script>
+<script src="js/ansage.js"></script>
 </body>
 </html>
