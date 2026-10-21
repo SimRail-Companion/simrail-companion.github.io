@@ -62,7 +62,7 @@
 
 <header>
   <div class="innen">
-    <a class="marke" href="#">🚂 SimRail Companion</a>
+    <a class="marke" href="#">SimRail Companion</a>
     <nav class="kopf-links" aria-label="Abschnitte">
       <a href="#funktionen">Funktionen</a>
       <a href="#loslegen">Loslegen</a>
@@ -79,7 +79,7 @@
       <p class="lead">Wähle eine Border Station und ein Zeitfenster – SimRail Companion stellt dir einen Dienst zusammen,
         bei dem jede Fahrt dort beginnt, wo die letzte endete. Wie im echten Bahnbetrieb.</p>
       <div class="knoepfe">
-        <a class="knopf" href="app.html">🚂 App öffnen</a>
+        <a class="knopf" href="app.html">App öffnen</a>
         <button class="zweit" type="button" id="kontoKnopf">Konto anlegen</button>
       </div>
     </div>
@@ -163,7 +163,7 @@
 <script>
   function kontoAnzeigen() {
     const k = window.SimRailKonto, knopf = document.getElementById("kontoKnopf");
-    knopf.textContent = k && k.angemeldet() ? "👤 " + k.name() : "Konto anlegen";
+    knopf.textContent = k && k.angemeldet() ? k.name() : "Konto anlegen";
   }
   document.getElementById("kontoKnopf").addEventListener("click", () => {
     const k = window.SimRailKonto;
